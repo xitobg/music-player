@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>html5音乐播放器</title>
+    <meta name="keywords" content="关键词"/>
+    <meta name="description" content="描述"/>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: rgb(55,76,86);
+        }
+        .photo{
+            width: 320px;
+            height: 600px;
+            background: #222222;
+            margin: 70px auto;
+            box-shadow: 0 0 7px 1px #fff;/*水平偏移 垂直方向偏移值 边缘模糊程度 范围 颜色*/
+            border-radius: 20px;
+            padding: 7px;
+        }
+        .photo .top{
+            width: 320px;
+            height: 23px;
+            background: url("images/1.png");
+        }
+        .photo .title{
+            width: 320px;
+            height: 30px;
+            background: url("images/2.png");
+            color: #cccccc;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+        }
+        .photo .singer{
+            height: 30px;
+            color: #cccccc;
+            text-align: center;
+            line-height: 30px;
+            /*font-weight: bold;*/
+            font-size: 14px;
+        }
+        .photo .play{
+            width: 190px;
+            height: 190px;
+            background: url("images/3.png");
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+        .rotate{
+            -webkit-animation: rot 5s linear infinite;/*动画名 动画时间 运动速度类型 执行多少次*/
+        }
+        @keyframes rot {
+            from{transform:rotate(0deg);}
+            to{transform:rotate(360deg);}
+        }
+        .photo .lrc{
+            width: 320px;
+            height: 285px;
+            margin-top: 20px;
+            /*background: red;*/
+            overflow: hidden;
+        }
+        .photo .lrc .content{
+            position: relative;
+            left: 0;
+            top: 0;
+            width: 320px;
+            margin-top: 1px;
+        }
+        .photo .lrc p{
+            color: #cccccc;
+            font-size: 12px;
+            text-align: center;
+            line-height: 20px;
+        }
+        #txt{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="photo">
+    <div class="top"></div>
+    <div class="title">小幸运</div>
+    <div class="singer">谭嘉仪</div>
+    <div class="play"></div>
+    <div class="lrc">
+        <div class="content"></div>
+    </div>
+</div>
+<textarea name="" id="txt" cols="30" rows="10">
+[00:00.64]小幸运 - 谭嘉仪
+[00:02.15]词：徐世珍&吴辉福
+[00:03.70]曲：JerryC
+[00:04.14]编曲：JerryC
+[00:13.77]我听见雨滴落在青青草地
+[00:19.89]我听见远方下课钟声响起
+[00:25.74]可是我没有听见你的声音
+[00:30.74]认真 呼唤我姓名
+[00:37.92]爱上你的时候还不懂感情
+[00:44.12]离别了才觉得刻骨 铭心
+[00:50.09]为什么没有发现遇见了你
+[00:54.70]是生命最好的事情
+[01:00.30]也许当时忙着微笑和哭泣
+[01:06.36]忙着追逐天空中的流星
+[01:12.12]人理所当然的忘记
+[01:16.55]是谁风里雨里一直默默守护在原地
+[01:24.44]原来你是我最想留住的幸运
+[01:29.69]原来我们和爱情曾经靠得那么近
+[01:35.67]那为我对抗世界的决定
+[01:40.29]那陪我淋的雨
+[01:43.28]一幕幕都是你 一尘不染的真心
+[01:50.60]与你相遇 好幸运
+[01:53.96]可我已失去为你泪流满面的权利
+[01:59.98]但愿在我看不到的天际
+[02:04.63]你张开了双翼
+[02:07.68]遇见你的注定 她会有多幸运
+[02:27.28]青春是段跌跌撞撞的旅行
+[02:33.44]拥有着后知后觉的美丽
+[02:39.55]来不及感谢是你给我勇气
+[02:44.22]让我能做回我自己
+[02:49.72]也许当时忙着微笑和哭泣
+[02:55.55]忙着追逐天空中的流星
+[03:01.61]人理所当然的忘记
+[03:06.03]是谁风里雨里一直默默守护在原地
+[03:13.79]原来你是我最想留住的幸运
+[03:19.05]原来我们和爱情曾经靠得那么近
+[03:25.17]那为我对抗世界的决定
+[03:29.68]那陪我淋的雨
+[03:32.56]一幕幕都是你 一尘不染的真心
+[03:39.89]与你相遇 好幸运
+[03:43.40]可我已失去为你泪流满面的权利
+[03:49.32]但愿在我看不到的天际
+[03:53.97]你张开了双翼
+[03:56.98]遇见你的注定
+[04:00.47]Oh 她会有多幸运
+</textarea>
+<audio src="mp3/谭嘉仪-小幸运.mp3" id="mymusic"></audio>
+</body>
+<script>
+    var MyMusic = document.getElementById("mymusic");
+    var Txt = document.getElementById("txt");
+    var btn = document.getElementsByClassName("play")[0];//找到第一个类名为
+    var con = document.getElementsByClassName("content")[0]
+    var onoff = true;
+    //点击播放
+    btn.onclick = function(){
+        if(onoff){
+            //(this 时间对象)
+            this.className += ' rotate';
+            MyMusic.play();//播放音乐
+            onoff = false;
+        }else{
+            this.className = 'play';
+            MyMusic.pause();//暂停音乐
+            onoff = true;
+        }
+    }
+//添加歌词
+    var lrc = Txt.value;
+    var html = '';//添加歌词
+    var lrcarr = lrc.split('[');//切割之后是数组星矢
+//    console.log(lrcarr);
+    for(var i=0;i<lrcarr.length;i++){
+        var arr =lrcarr[i].split(']');
+//        console.log(arr);
+        var text = arr[1];//获取歌词
+        var timer = arr[0].split('.');
+        var time = timer[0].split(':')//获取时间
+        var ms = time[0]*60 + time[1]*1;//时间转换秒钟
+        if(text){
+            html += "<p id='"+ms+"'>"+text+"</p>";
+        }
+    }
+    con.innerHTML = html;
+// 歌词同步
+    var num = 0;
+    var op = document.getElementsByTagName('p');
+      //当播放位置发生改变的时候触发
+     MyMusic.addEventListener('timeupdate',function(){
+         var vurtime = parseInt(this.currentTime)//获取当前播放时间
+         if(document.getElementById(vurtime)){
+             for(var i=0;i<op.length;i++){
+                op[i].style.cssText = "color:#ccc;font-size:12px;"
+             }
+             document.getElementById(vurtime).style.cssText = "color:red;font-size:18px"
+            if(op[8+num].id == vurtime){//只能判断一次
+                con.style.top = -20*num+"px";
+                num++;
+            }
+         }
+     });
+    MyMusic.addEventListener('ended',function(){
+        btn.className = 'play';
+        onoff = true;
+        this.currentTime = 0;
+        con.style.top = 0;
+        num = 0;
+    })
+</script>
+</html>
